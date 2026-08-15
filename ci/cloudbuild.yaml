@@ -1,0 +1,86 @@
+##  Copyright 2023 Google LLC
+##  
+##  Licensed under the Apache License, Version 2.0 (the "License");
+##  you may not use this file except in compliance with the License.
+##  You may obtain a copy of the License at
+##  
+##      https://www.apache.org/licenses/LICENSE-2.0
+##  
+##  Unless required by applicable law or agreed to in writing, software
+##  distributed under the License is distributed on an "AS IS" BASIS,
+##  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+##  See the License for the specific language governing permissions and
+##  limitations under the License.
+
+
+##  This code creates demo environment for CSA - Application Development Architecture Pattern   ##
+##  This demo code is not built for production workload ##
+substitutions:
+  _ORGANIZATION_ID: "<ORG_ID>"
+  _BILLING_ACCOUNT: "<BILLING_ACCOUNT_ID>"
+  _END_USER_ACCCOUNT: "<END_USER_EMAIL_ADDRESS>"
+  _TEST_PROJECT_NAME: "<TEST_PROJECT_NAME>"
+  _TEST_FOLDER_NAME: "<TEST_PROJECT_FOLDER>"
+
+steps:
+- id: 'tf init'
+  name: 'hashicorp/terraform:1.0.0'
+  entrypoint: 'sh'
+  args:
+  - '-ex'
+  - '-c'
+  - |
+    terraform init
+
+- id: 'tf plan'
+  name: 'hashicorp/terraform:1.0.0'
+  entrypoint: 'sh'
+  args:
+  - '-ex'
+  - '-c'
+  - |
+    export TF_VAR_organization_id="${_ORGANIZATION_ID}"
+    export TF_VAR_billing_account="${_BILLING_ACCOUNT}"
+    export TF_VAR_end_user_account="user:${_END_USER_ACCCOUNT}"
+    export TF_VAR_project_name="${_TEST_PROJECT_NAME}"
+    export TF_VAR_folder_name="${_TEST_FOLDER_NAME}"
+    terraform plan
+
+- id: 'tf apply'
+  name: 'gcr.io/google.com/cloudsdktool/google-cloud-cli'
+  entrypoint: 'bash'
+  args:
+  - '-ex'
+  - '-c'
+  - |
+    apt-get install netcat jq gettext-base procps unzip -q -y
+
+    curl https://releases.hashicorp.com/terraform/1.6.3/terraform_1.6.3_linux_amd64.zip > terraform_1.6.3_linux_amd64.zip
+    unzip terraform_1.6.3_linux_amd64.zip
+    mv terraform /usr/bin
+
+    export TF_VAR_organization_id="${_ORGANIZATION_ID}"
+    export TF_VAR_billing_account="${_BILLING_ACCOUNT}"
+    export TF_VAR_end_user_account="user:${_END_USER_ACCCOUNT}"
+    export TF_VAR_project_name="${_TEST_PROJECT_NAME}"
+    export TF_VAR_folder_name="${_TEST_FOLDER_NAME}"
+    terraform apply -auto-approve
+
+- id: 'tf destroy'
+  name: 'gcr.io/google.com/cloudsdktool/google-cloud-cli'
+  entrypoint: 'bash'
+  args:
+  - '-ex'
+  - '-c'
+  - |
+    apt-get install netcat jq gettext-base procps unzip -q -y
+
+    curl https://releases.hashicorp.com/terraform/1.6.3/terraform_1.6.3_linux_amd64.zip > terraform_1.6.3_linux_amd64.zip
+    unzip terraform_1.6.3_linux_amd64.zip
+    mv terraform /usr/bin
+
+    PROJECT_ID=$$(terraform show -json terraform.tfstate | jq -r '.values.root_module.child_modules[].resources[] | select(.name=="app_dev_project") | .values.project_id')
+    gcloud projects delete $$PROJECT_ID
+    FOLDER_ID=$$(terraform show -json terraform.tfstate | jq -r '.values.root_module.child_modules[].resources[] | select(.name=="app_dev_project") | .values.folder_id') 
+    gcloud resource-manager folders delete $$FOLDER_ID
+

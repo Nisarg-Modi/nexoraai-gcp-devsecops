@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ```
 This code creates a demo environment for Secure DevOps Architecture Pattern
 This demo code is not built for production workload
@@ -345,3 +346,7 @@ information on contributing to this module.
 ## Security Disclosures
 
 Please see our [security disclosure process](./SECURITY.md).
+=======
+# nexoraai-gcp-devsecops
+devsecops
+>>>>>>> f2f7882fe04cd38cdb5291ec668cbce76c432257

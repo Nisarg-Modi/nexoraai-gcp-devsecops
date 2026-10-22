@@ -1,11 +1,10 @@
 [![Architecture diagram of nisarg-modi/nexoraai-gcp-devsecops](https://gitdiagram.com/nisarg-modi/nexoraai-gcp-devsecops/diagram.png)](https://gitdiagram.com/nisarg-modi/nexoraai-gcp-devsecops?utm_source=readme&utm_medium=picture)
 
-<<<<<<< HEAD
-```
-This code creates a demo environment for Secure DevOps Architecture Pattern
-This demo code is not built for production workload
-```
+**How nisarg-modi/nexoraai-gcp-devsecops works**
 
+This repository provisions a demonstration secure DevOps environment on Google Cloud and includes a Java Hello World sample. The user journey is to apply Terraform, develop in a Cloud Workstation, then build and deploy to GKE through the documented outer loop. The README describes the major services and security goals, but no source excerpts were provided, so edges below reflect only documented relationships; Terraform resource-level interactions are not inferred.
+
+```
 # Architecture and guide for secure cloud native development on GCP
 
 # Summary

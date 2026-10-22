@@ -1,3 +1,5 @@
+[![Architecture diagram of nisarg-modi/nexoraai-gcp-devsecops](https://gitdiagram.com/nisarg-modi/nexoraai-gcp-devsecops/diagram.png)](https://gitdiagram.com/nisarg-modi/nexoraai-gcp-devsecops?utm_source=readme&utm_medium=picture)
+
 <<<<<<< HEAD
 ```
 This code creates a demo environment for Secure DevOps Architecture Pattern
